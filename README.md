@@ -1,2 +1,2 @@
 # MSSQL
-Assorted SQL scripts in progress
+Assorted MSSQL scripts in progress
