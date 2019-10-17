@@ -3,19 +3,20 @@
 
 
 
-/*********************************************************************************
-==================================================================================
+/*********************************************************************************************
+==============================================================================================
 
 
-Make sure to change the SET variable strings commented with /*** ***/
+!!!!!!!!!!Make sure to change the SET variable strings commented with /*** ***/!!!!!!!!!!
+
+Credit: I got the idea & steps from: 
+https://www.mssqltips.com/sqlservertip/1891/steps-to-rename-a-sql-server-database/ ;  I just 
+rolled it all into one with a safety net backup & error checking. Any other snippets I run
+across from elsewhere I'll add when I notice them.
 
 
-==================================================================================
-*********************************************************************************/
-
-
-
-
+==============================================================================================
+*********************************************************************************************/
 
 
 USE [master]
@@ -48,7 +49,7 @@ SET NOCOUNT ON
 
 SET @DBName = N'AdventureWorks2014' /*** Change to current name of database to be renamed ***/
 SET @NewDBName = N'AdventureWorks2014_OLD' /*** Change to new name wanted for the database ***/
-SET	@BackupLocation		= N'N:\Backup\'  /*** Change path to appropriate local folder or UNC path. MAKE SURE TO INCLUDE THE TRAILING \ ***/
+SET	@BackupLocation		= N'N:\Backup\'  /*** Change path to appropriate local folder or UNC path. MAKE SURE TO INCLUDE THE TRAILING \ on the path ***/
 SET	@BackupFileExtension	= N'_FULL-COPY_ONLY.BAK'
 SELECT @BackupFileDate = CONVERT(VARCHAR(20),GETDATE(),112) + '_' + REPLACE(CONVERT(VARCHAR(20),GETDATE(),108),':','') 
 SET @BackupFullFileString = @BackupLocation + @dbname + '_' + @BackupFileDate + @BackupFileExtension
@@ -241,4 +242,3 @@ BEGIN
 		--Problem: xp_cmdshell doesn't have filesystem permissions to Log directory
 		PRINT 'PROBLEM: xp_cmdshell does not have filesystem permissions to Log directory: ' + @LDFFilePath
 END
-
