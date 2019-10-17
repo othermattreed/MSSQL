@@ -148,7 +148,7 @@ BEGIN
 	EXEC master..sp_renamedb @DBName,@NewDBName
 	PRINT 'Database: ' + @DBName + ' has been renamed to ' + @NewDBName + char(13) + char(10)
 
-	-- Change logical file Names
+	-- Change logical filenames
 	EXEC('ALTER DATABASE ' + @NewDBName + ' MODIFY FILE (NAME = ' + @Curr_Logical_MDF + ', NEWNAME = ' + @New_Logical_MDF +')')
 	PRINT 'Logical MDF: ' + @Curr_Logical_MDF + ' has been renamed to ' + @New_Logical_MDF + char(13) + char(10)
 	EXEC('ALTER DATABASE ' + @NewDBName + ' MODIFY FILE (NAME = ' + @Curr_Logical_LDF + ', NEWNAME = ' + @New_Logical_LDF +')')
@@ -200,7 +200,7 @@ BEGIN
 	-- Check DB status
 	SELECT name, State_desc from sys.databases WHERE [name] LIKE @NewDBName
 
-	-- Validate the file name changes
+	-- Validate the filename changes
 	EXEC('USE [' + @NewDBName + ']; SELECT file_id, name as [logical_file_name], physical_name FROM sys.database_files')
 END
 
@@ -242,3 +242,4 @@ BEGIN
 		--Problem: xp_cmdshell doesn't have filesystem permissions to Log directory
 		PRINT 'PROBLEM: xp_cmdshell does not have filesystem permissions to Log directory: ' + @LDFFilePath
 END
+
