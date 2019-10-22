@@ -1,4 +1,4 @@
-/* Rename Database, Logical Filenames, & Phyiscal Filenames */
+/* Rename Database, Logical Filenames, & Physical Filenames */
 
 
 
