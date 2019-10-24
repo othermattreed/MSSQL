@@ -5,9 +5,8 @@
 
 /*********************************************************************************************
 ==============================================================================================
-
-
 !!!!!!!!!!Make sure to change the SET variable strings commented with /*** ***/!!!!!!!!!!
+
 
 Credit: I got the idea & steps from: 
 https://www.mssqltips.com/sqlservertip/1891/steps-to-rename-a-sql-server-database/ ;  I just 
@@ -136,6 +135,7 @@ AND (SELECT [database_id] FROM sys.master_files WHERE [name] LIKE @New_Logical_M
 AND (SELECT [database_id] FROM sys.master_files WHERE [name] LIKE @New_Logical_LDF) IS NULL -- Check if new logical LDF name does not already exist
 AND (@XPCSReturnCodeMDF = 0) -- Check filesystem permissions to write to Data directory
 AND (@XPCSReturnCodeLDF = 0) -- Check filesystem permissions to write to Log directory
+AND (SELECT DISTINCT db.name FROM sys.dm_hadr_database_replica_states ha INNER JOIN sys.databases db ON ha.database_id = db.database_id WHERE db.name = @DBName) IS NULL
 BEGIN
 	-- Take a COPY_ONLY backup
 	BACKUP DATABASE @DBName TO DISK = @BackupFullFileString WITH COMPRESSION, COPY_ONLY
@@ -241,5 +241,7 @@ BEGIN
 	IF (@XPCSReturnCodeLDF = 1)
 		--Problem: xp_cmdshell doesn't have filesystem permissions to Log directory
 		PRINT 'PROBLEM: xp_cmdshell does not have filesystem permissions to Log directory: ' + @LDFFilePath
+	IF (SELECT DISTINCT db.name FROM sys.dm_hadr_database_replica_states ha INNER JOIN sys.databases db ON ha.database_id = db.database_id WHERE db.name = @DBName) IS NOT NULL
+		--Problem: The database is part of an Always-On availability group & not able to be renamed without removing, renaming, resyncing, readding it
+		PRINT 'PROBLEM: Database ' + @DBName + ' is part of an Always-On Availability Group'
 END
-
