@@ -241,6 +241,7 @@ BEGIN
 	IF (@XPCSReturnCodeLDF = 1)
 		--Problem: xp_cmdshell doesn't have filesystem permissions to Log directory
 		PRINT 'PROBLEM: xp_cmdshell does not have filesystem permissions to Log directory: ' + @LDFFilePath
+		
 	IF (SELECT DISTINCT db.name FROM sys.dm_hadr_database_replica_states ha INNER JOIN sys.databases db ON ha.database_id = db.database_id WHERE db.name = @DBName) IS NOT NULL
 		--Problem: The database is part of an Always-On availability group & not able to be renamed without removing, renaming, resyncing, readding it
 		PRINT 'PROBLEM: Database ' + @DBName + ' is part of an Always-On Availability Group'
